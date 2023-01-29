@@ -16,8 +16,8 @@ function onInput(e) {
     console.log(countryName);
     fetchCountries(countryName)
         .then(renderCountryList)
-     .catch(error=>{console.log(error)
-    // Notiflix.Notify.failure("Oops, there is no country with that name")
+     .catch(error=>{
+    Notiflix.Notify.failure("Oops, there is no country with that name")
     });
     
 };
@@ -28,6 +28,7 @@ function clearInput() {
 }
 
 function renderCountryList(res) {
+  
     console.log(res)
     clearInput();
 
@@ -41,7 +42,7 @@ function renderCountryList(res) {
 
 function renderCountriesList({ flags, name }) {
     return `<li class='country-listInfo'>
-    <img class='country-flag' src='${flags.svg}'/>
+    <img class='country-flag' src='${flags}'/>
     <h2 class='country-list-name'>${name}</h2>
     </li>`;
 };
@@ -49,7 +50,7 @@ function renderCountriesList({ flags, name }) {
 function renderCountryInfo({ name, capital, population, flags, languages }) {
     return `<li class='country-main-info'>
     <div class='wrapper-country-info'>
-    <img class='country-flag-info src='${flags.svg}'/>'
+    <img class='country-flag-info src='${flags}'/>'
     <h2 class='country-list-name'>${name}</h2>
     </div>
     <div class='country-secondary-info'>
