@@ -16,9 +16,9 @@ function onInput(e) {
     console.log(countryName);
     fetchCountries(countryName)
         .then(renderCountryList)
-     .catch(error=>{
+     .catch(error=>
     Notiflix.Notify.failure("Oops, there is no country with that name")
-    });
+    );
     
 };
 
