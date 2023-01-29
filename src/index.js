@@ -12,38 +12,45 @@ const countryList = document.getElementsByClassName("country-list");
 const countryInfo = document.getElementsByClassName("country-info");
 
 function onInput(e) {
-    const countryName = e.target.value;
+    const countryName = e.target.value.trim();
     console.log(countryName);
     fetchCountries(countryName)
-        .then(userdata => console.log(userdata))
-        .catch(error => {
-        Notiflix.Notify.failure("Oops, there is no country with that name");
-        });
-    // 
+        .then(renderCountryList)
+     .catch(error=>{console.log(error)
+    // Notiflix.Notify.failure("Oops, there is no country with that name")
+    });
+    
 };
-function renderProfile(userdata) {
-    console.log(userdata)
+
+function clearInput() {
+    countryList.innerHTML = ''; 
+    countryInfo.innerHTML = '';
+}
+
+function renderCountryList(res) {
+    console.log(res)
     clearInput();
-    if (userdata.length > 10) { Notiflix.Notify.info("Too many matches found. Please enter a more specific name."); }
-    else if (userdata.length === 1) { countryInfo.innerHTML = rendercountryInfo(userdata[0]); }
+
+    if (res.length > 10) { Notiflix.Notify.info("Too many matches found. Please enter a more specific name."); }
+    else if (res.length === 1) { countryInfo.innerHTML = renderCountryInfo(res[0]); }
     else {
-        const renderListCountry = userdata.map(country => renderCountriesList(country)).join('');
+        const renderListCountry = res.map(country => renderCountriesList(country)).join('');
         countryList.insertAdjacentHTML('beforeend', renderListCountry);
     }
 };
 
 function renderCountriesList({ flags, name }) {
-    return `<li class='country-ListInfo'>
+    return `<li class='country-listInfo'>
     <img class='country-flag' src='${flags.svg}'/>
-    <h2 class='country-list-name'>${name.official}</h2>
+    <h2 class='country-list-name'>${name}</h2>
     </li>`;
 };
 
-function rendercountryInfo({ name, capital, population, flags, languages }) {
+function renderCountryInfo({ name, capital, population, flags, languages }) {
     return `<li class='country-main-info'>
     <div class='wrapper-country-info'>
     <img class='country-flag-info src='${flags.svg}'/>'
-    <h2 class='country-list-name'>${name.official}</h2>
+    <h2 class='country-list-name'>${name}</h2>
     </div>
     <div class='country-secondary-info'>
     <p><b>capital:</b> ${capital}</p>
