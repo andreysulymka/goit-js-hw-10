@@ -16,8 +16,8 @@ function onInput(e) {
     console.log(countryName);
     fetchCountries(countryName)
         .then(renderCountryList)
-     .catch(error=>
-    Notiflix.Notify.failure("Oops, there is no country with that name")
+     .catch(onError
+    
     );
     
 };
@@ -60,5 +60,10 @@ function renderCountryInfo({ name, capital, population, flags, languages }) {
     </div>
     </li>`;
 };
+
+function onError(err) {
+    console.log(err)
+    Notiflix.Notify.failure("Oops, there is no country with that name")
+}
 
 
