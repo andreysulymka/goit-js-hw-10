@@ -1,10 +1,9 @@
 import './css/styles.css';
 import debounce from 'lodash.debounce';
-import { fetchCountries } from './fetchcountries';
+import {fetchCountries} from './fetchcountries';
 import Notiflix from 'notiflix';
 
 const DEBOUNCE_DELAY = 300;
-
 
 const inputRef = document.getElementById('search-box');
 inputRef.addEventListener('input', debounce(onInput, DEBOUNCE_DELAY));
@@ -12,32 +11,24 @@ const countryList = document.getElementsByClassName("country-list");
 const countryInfo = document.getElementsByClassName("country-info");
 
 function onInput(e) {
-    const countryName = e.target.value.trim();
-    console.log(countryName);
-    fetchCountries(countryName)
-        .then(renderCountryList)
-     .catch(onError
-    
-    );
+    e.preventDefault();
+    const inputRef = e.target.value.trim();
+   fetchCountries(inputRef).then(renderCountryList)
+    // .catch(onError);
     
 };
 
-function clearInput() {
-    countryList.innerHTML = ''; 
-    countryInfo.innerHTML = '';
-}
 
-function renderCountryList(res) {
+// countriesObj це об'єкт країни
+function renderCountryList(countriesObj) {
   
-    console.log(res)
-    clearInput();
-
-    if (res.length > 10) { Notiflix.Notify.info("Too many matches found. Please enter a more specific name."); }
-    else if (res.length === 1) { countryInfo.innerHTML = renderCountryInfo(res[0]); }
-    else {
-        const renderListCountry = res.map(country => renderCountriesList(country)).join('');
-        countryList.insertAdjacentHTML('beforeend', renderListCountry);
-    }
+    console.log(countriesObj)
+    
+    if (countriesObj.length > 10) { Notiflix.Notify.info("Too many matches found. Please enter a more specific name.")}
+    else if (countriesObj.length === 1) { countryInfo.innerHTML = renderCountryInfo(countriesObj[0])}
+    else {const renderListCountry = countriesObj.map(country => renderCountriesList(country)).join('');
+    countryList.insertAdjacentHTML('beforeend', renderListCountry);
+     }
 };
 
 function renderCountriesList({ flags, name }) {
@@ -50,7 +41,7 @@ function renderCountriesList({ flags, name }) {
 function renderCountryInfo({ name, capital, population, flags, languages }) {
     return `<li class='country-main-info'>
     <div class='wrapper-country-info'>
-    <img class='country-flag-info src='${flags}'/>'
+    <img class='country-flag-info src='${flags.svg}'</img>
     <h2 class='country-list-name'>${name}</h2>
     </div>
     <div class='country-secondary-info'>
@@ -58,12 +49,16 @@ function renderCountryInfo({ name, capital, population, flags, languages }) {
     <p><b>population:</b> ${population}</p>
     <p><b>languages:</b> ${languages}</p>
     </div>
-    </li>`;
+    </li>;`
 };
 
-function onError(err) {
-    console.log(err)
-    Notiflix.Notify.failure("Oops, there is no country with that name")
-}
+// function onError(err) {
+//     console.log(err)
+//     // Notiflix.Notify.failure("Oops, there is no country with that name")
+// }
 
 
+// function clearInput() {
+//     countryList.innerHTML = ''; 
+//     countryInfo.innerHTML = '';
+// }
