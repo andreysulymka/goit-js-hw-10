@@ -5,50 +5,68 @@ import Notiflix from 'notiflix';
 
 const DEBOUNCE_DELAY = 300;
 
-const inputRef = document.getElementById('search-box');
-inputRef.addEventListener('input', debounce(onInput, DEBOUNCE_DELAY));
-const countryList = document.getElementsByClassName("country-list");
-const countryInfo = document.getElementsByClassName("country-info");
+const countryInput = document.querySelector('#search-box')
+const countryList = document.querySelector('.country-list')
+const countryInfo = document.querySelector('.country-info')
 
-function onInput(e) {
-    e.preventDefault();
-    const inputRef = e.target.value.trim();
-   fetchCountries(inputRef).then(renderCountryList)
-       .catch(error => console.log(error));
-};
-// { Notiflix.Notify.failure("Oops, there is no country with that name") }
+countryInput.addEventListener('input', debounce(onCountryInput, DEBOUNCE_DELAY))
 
-// countriesObj це об'єкт країни
-function renderCountryList(countriesObj) {
-  
-    console.log(countriesObj)
-    
-    if (countriesObj.length > 10) { Notiflix.Notify.info("Too many matches found. Please enter a more specific name.") }
-    else if (countriesObj === 0){ countryList.innerHTML = '' }
-    else if (countriesObj.length === 1) { countryInfo.innerHTML = renderCountryInfo(countriesObj[0]) }
-    else {const renderListCountry = countriesObj.map(country => renderCountriesList(country)).join('');
-        countryList.insertAdjacentHTML('beforeend', renderListCountry);
-    } ;
-};
+function onCountryInput() {
+  const name = countryInput.value.trim()
+  if (name === '') {
+    return (countryList.innerHTML = ''), (countryInfo.innerHTML = '')
+  }
 
-function renderCountriesList({ flags, name }) {
-    return `<li class='country-listInfo'>
-    <img class='country-flag' src='${flags}'/>
-    <h2 class='country-list-name'>${name}</h2>
-    </li>`;
-};
+  fetchCountries(name)
+    .then(countries => {
+      countryList.innerHTML = ''
+      countryInfo.innerHTML = ''
+      if (countries.length === 1) {
+        countryList.insertAdjacentHTML('beforeend', renderCountryList(countries))
+        countryInfo.insertAdjacentHTML('beforeend', renderCountryInfo(countries))
+      } else if (countries.length >= 10) {
+        alertTooManyMatches()
+      } else {
+        countryList.insertAdjacentHTML('beforeend', renderCountryList(countries))
+      }
+    })
+    .catch(alertWrongName)
+}
 
-function renderCountryInfo({ name, capital, population, flags, languages }) {
-    return `<li class='country-main-info'>
-    <div class='wrapper-country-info'>
-    <img class='country-flag-info src='${flags.svg}'</img>
-    <h2 class='country-list-name'>${name}</h2>
-    </div>
-    <div class='country-secondary-info'>
-    <p><b>capital:</b> ${capital}</p>
-    <p><b>population:</b> ${population}</p>
-    <p><b>languages:</b> ${languages}</p>
-    </div>
-    </li>;`
-};
+function renderCountryList(countries) {
+  const markup = countries
+    .map(({ name, flags }) => {
+      return `
+          <li class="country-list__item">
+              <img class="country-list__flag" src="${flags.svg}" alt="Flag of ${name.official}" width = 50px height = 50px>
+              <h2 class="country-list__name">${name.official}</h2>
+          </li>
+          `
+    })
+    .join('')
+  return markup
+}
+
+function renderCountryInfo(countries) {
+  const markup = countries
+    .map(({ capital, population, languages }) => {
+        return `
+            <ul class="country-info__list">
+            <li class="country-info__item"><p><b>Capital: </b>${capital}</p></li>
+            <li class="country-info__item"><p><b>Population: </b>${population}</p></li>
+            <li class="country-info__item"><p><b>Languages: </b>${Object.values(languages).join(', ')}</p></li>
+        </ul>
+        `
+    })
+    .join('')
+  return markup
+}
+
+function alertWrongName() {
+  Notiflix.Notify.failure('Oops, there is no country with that name')
+}
+
+function alertTooManyMatches() {
+  Notiflix.Notify.info('Too many matches found. Please enter a more specific name.')
+}
 
