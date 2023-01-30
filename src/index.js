@@ -15,7 +15,6 @@ function onInput(e) {
     const inputRef = e.target.value.trim();
    fetchCountries(inputRef).then(renderCountryList)
     .catch(error => {console.log(error)});
-    
 };
 
 
