@@ -14,9 +14,9 @@ function onInput(e) {
     e.preventDefault();
     const inputRef = e.target.value.trim();
    fetchCountries(inputRef).then(renderCountryList)
-    .catch(error => {console.log(error)});
+       .catch(error => console.log(error));
 };
-
+// { Notiflix.Notify.failure("Oops, there is no country with that name") }
 
 // countriesObj це об'єкт країни
 function renderCountryList(countriesObj) {
