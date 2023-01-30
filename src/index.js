@@ -24,11 +24,12 @@ function renderCountryList(countriesObj) {
   
     console.log(countriesObj)
     
-    if (countriesObj.length > 10) { Notiflix.Notify.info("Too many matches found. Please enter a more specific name.")}
-    else if (countriesObj.length === 1) { countryInfo.innerHTML = renderCountryInfo(countriesObj[0])}
+    if (countriesObj.length > 10) { Notiflix.Notify.info("Too many matches found. Please enter a more specific name.") }
+    else if (countriesObj === 0){ countryList.innerHTML = '' }
+    else if (countriesObj.length === 1) { countryInfo.innerHTML = renderCountryInfo(countriesObj[0]) }
     else {const renderListCountry = countriesObj.map(country => renderCountriesList(country)).join('');
-    countryList.insertAdjacentHTML('beforeend', renderListCountry);
-     }
+        countryList.insertAdjacentHTML('beforeend', renderListCountry);
+    } ;
 };
 
 function renderCountriesList({ flags, name }) {
