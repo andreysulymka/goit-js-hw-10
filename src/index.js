@@ -14,7 +14,7 @@ function onInput(e) {
     e.preventDefault();
     const inputRef = e.target.value.trim();
    fetchCountries(inputRef).then(renderCountryList)
-    // .catch(onError);
+    .catch(onError);
     
 };
 
@@ -53,13 +53,3 @@ function renderCountryInfo({ name, capital, population, flags, languages }) {
     </li>;`
 };
 
-// function onError(err) {
-//     console.log(err)
-//     // Notiflix.Notify.failure("Oops, there is no country with that name")
-// }
-
-
-// function clearInput() {
-//     countryList.innerHTML = ''; 
-//     countryInfo.innerHTML = '';
-// }
